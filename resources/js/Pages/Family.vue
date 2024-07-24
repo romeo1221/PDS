@@ -87,7 +87,7 @@
             <p>Age: {{ member.age }}</p>
             <p>Occupation: {{ member.occupation }}</p>
             <p>Contact Number: {{ member.contactNumber }}</p>
-            <button class="remove-button" @click="removeMember(index)">Remove</button>
+            <button class="remove-button" @click="removeMember(index)">RemoveE</button>
           </div>
         </div>
         <!-- "Add Another Member" button -->
