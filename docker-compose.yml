@@ -1,0 +1,30 @@
+version: "3.8"
+
+networks:
+    default:
+        external: true
+        name: "mainNetwork"
+
+services:
+    nginx:
+        image: nginx:stable
+        container_name: PDS-Web
+        ports:
+            - 8090:80
+        volumes:
+            - .:/var/www/PDS_APP
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+
+        depends_on:
+            - php
+        restart: unless-stopped
+
+    php:
+        build:
+            context: ./docker
+            dockerfile: DockerFile
+        container_name: PDS-Php
+        volumes:
+            - .:/var/www/PDS_APP
+            - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+        restart: unless-stopped
