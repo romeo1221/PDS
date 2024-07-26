@@ -46,12 +46,48 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="citizenship">Citizenship:</label>
-            <input type="text" id="citizenship" v-model="formData.citizenship" required>
+            <label>Citizenship:</label>
+            <div class="radio-group">
+              <label>
+                <input type="radio" v-model="formData.citizenship" value="Filipino" required> Filipino
+              </label>
+              <label>
+                <input type="radio" v-model="formData.citizenship" value="Dual" required> Dual Citizenship
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dual Citizenship Options -->
+        <div v-if="formData.citizenship === 'Dual'" class="dual-citizenship">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dualType">Type of Dual Citizenship:</label>
+              <select id="dualType" v-model="formData.dualType" required>
+                <option value="">--Select Type--</option>
+                <option value="By Birth">By Birth</option>
+                <option value="By Naturalization">By Naturalization</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="dualCountry">Country:</label>
+              <input type="text" id="dualCountry" v-model="formData.dualCountry" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="height">Height (m):</label>
+            <input type="number" step="0.01" id="height" v-model="formData.height" required>
           </div>
           <div class="form-group">
-            <label for="tel">Tel./CP No.:</label>
-            <input type="tel" id="tel" v-model="formData.tel" required>
+            <label for="weight">Weight (kg):</label>
+            <input type="number" step="0.1" id="weight" v-model="formData.weight" required>
+          </div>
+          <div class="form-group">
+            <label for="bloodType">Blood Type:</label>
+            <input type="text" id="bloodType" v-model="formData.bloodType">
           </div>
         </div>
 
@@ -86,7 +122,7 @@
 
     <div class="upload-container">
       <label for="photo">
-        <img :src="photoDataUrl || './profile.png'" alt="Profile Picture" class="profile-img">
+        <img :src="photoDataUrl || '/images/profile.png'" alt="Profile Picture" class="profile-img">
         <pre>Upload Profile</pre>
       </label>
       <input type="file" id="photo" @change="handleFileUpload" accept="image/*">
@@ -107,7 +143,11 @@ export default {
         placeOfBirth: '',
         sex: '',
         citizenship: '',
-        tel: '',
+        dualType: '',
+        dualCountry: '',
+        height: '',
+        weight: '',
+        bloodType: '',
         civilStatus: '',
         email: ''
       },
@@ -121,14 +161,15 @@ export default {
       if (this.isFormValid()) {
         console.log('Form submitted:', this.formData);
         this.formSubmitted = true;
-        // Assuming you want to navigate to the next page after successful submission
         this.goTo('/address');
       } else {
         this.warningMessage = 'Please complete the form before proceeding.';
       }
     },
     isFormValid() {
-      return Object.values(this.formData).every(field => field.trim() !== '') && this.formData.sex;
+      const isDual = this.formData.citizenship === 'Dual';
+      const isDualValid = !isDual || (this.formData.dualType && this.formData.dualCountry);
+      return Object.values(this.formData).every(field => field.trim() !== '') && this.formData.sex && isDualValid;
     },
     goTo(route) {
       if (this.isFormValid() || route === '/basic') {
@@ -144,7 +185,7 @@ export default {
         const reader = new FileReader();
         reader.onload = (e) => {
           this.photoDataUrl = e.target.result;
-          console.log('Photo uploaded:', this.photoDataUrl); // Debugging log
+          console.log('Photo uploaded:', this.photoDataUrl); 
         };
         reader.readAsDataURL(file);
       }
@@ -160,7 +201,7 @@ export default {
   align-items: flex-start;
   gap: 15px;
   padding: 50px;
-  padding-top: 1%;
+  margin-top: 5%;
 }
 
 .basic-form {
@@ -173,7 +214,7 @@ export default {
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
-  text-align: center;
+  text-align: left;
 }
 
 .form-row {
@@ -197,6 +238,7 @@ input[type="text"],
 input[type="date"],
 input[type="email"],
 input[type="tel"],
+input[type="number"],
 select {
   width: 90%;
   padding: 10px;
@@ -264,6 +306,13 @@ select {
 
 input[type="file"] {
   display: none;
+}
+
+.dual-citizenship {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 @media (max-width: 600px) {

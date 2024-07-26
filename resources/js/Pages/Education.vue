@@ -71,7 +71,7 @@
     <!-- Results Display -->
     <div v-if="formSubmitted" class="results-section">
       <div class="submitted-message">
-        <p>Form submitted successfully!</p>
+        <!-- <p>Form submitted successfully!</p> -->
         <div class="education-background">
           <div v-for="(education, index) in educationBackground" :key="index" class="education-entry">
             <p>Education Level: {{ education.degree }}</p>
@@ -152,7 +152,7 @@ export default {
         address: '',
         yearOfGraduation: ''
       };
-      this.showForm = true; // Ensure the form is shown for new entries
+      this.showForm = true; 
     },
     removeEducation(index) {
       this.educationBackground.splice(index, 1);
@@ -171,14 +171,16 @@ export default {
 
 .basic-form {
   width: 100%;
-  max-width: 70%;
+  max-width: 85%;
   padding: 20px;
-  background-color: rgba(240, 240, 240, 0.8); /* Semi-transparent background */
+  background-color: rgba(240, 240, 240, 0.8); 
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
   text-align: left;
+  margin-top: 5%;
+  margin-left: 220px;
 }
 
 .form-row {
@@ -246,7 +248,7 @@ button:hover {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   width: 100%;
   max-width: 600px;
-  overflow: auto; /* Ensure content doesn't overflow */
+  overflow: auto; 
 }
 
 .results-section {
@@ -258,8 +260,8 @@ button:hover {
   padding: 20px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   margin-top: 20px;
-  box-sizing: border-box; /* Ensure padding and border are included in width */
-  overflow: auto; /* Ensure content doesn't overflow */
+  box-sizing: border-box; 
+  overflow: auto; 
 }
 
 .submitted-message {
@@ -271,7 +273,7 @@ button:hover {
   flex-wrap: wrap;
   justify-content: center;
   font-family: Arial, Helvetica, sans-serif;
-  gap: 20px; /* Add space between entries */
+  gap: 20px; 
 }
 
 .education-entry {

@@ -45,6 +45,15 @@
               <input v-else type="text" id="relation" v-model="formData.relation" disabled>
             </div>
 
+            <div v-if="formData.relation === 'Parent'" class="form-group">
+              <label for="parentType">Parent Type:</label>
+              <select id="parentType" v-model="formData.parentType" required>
+                <option value="">--Select Parent Type--</option>
+                <option value="Mother">Mother</option>
+                <option value="Father">Father</option>
+              </select>
+            </div>
+
             <div class="form-group">
               <label for="name">Name:</label>
               <input type="text" id="name" v-model="formData.name" required>
@@ -79,18 +88,19 @@
     <!-- Results Display -->
     <div v-if="familyMembers.length > 0" class="results-section">
       <div class="submitted-message">
-        <p>Form submitted successfully!</p>
+        <!-- <p>Form submitted successfully!</p> -->
         <div class="family-members">
           <div v-for="(member, index) in familyMembers" :key="index" class="family-member">
             <p>Relation: {{ member.relation }}</p>
+            <p v-if="member.relation === 'Parent'">Parent Type: {{ member.parentType }}</p>
             <p>Name: {{ member.name }}</p>
             <p>Age: {{ member.age }}</p>
             <p>Occupation: {{ member.occupation }}</p>
             <p>Contact Number: {{ member.contactNumber }}</p>
-            <button class="remove-button" @click="removeMember(index)">RemoveE</button>
+            <button class="remove-button" @click="removeMember(index)">Remove</button>
           </div>
         </div>
-        <!-- "Add Another Member" button -->
+        <button class="add-another-button" @click="addAnotherMember">Add Another Member</button>
       </div>
     </div>
   </div>
@@ -103,6 +113,7 @@ export default {
       selectedRelation: '',
       formData: {
         relation: '',
+        parentType: '',  // Added field
         name: '',
         age: '',
         occupation: '',
@@ -124,7 +135,12 @@ export default {
         alert('Please select a relation.');
         return;
       }
-      
+
+      if (this.formData.relation === 'Parent' && !this.formData.parentType) {
+        alert('Please select if the parent is a Mother or Father.');
+        return;
+      }
+
       this.familyMembers.push({ ...this.formData });
       console.log('Form submitted:', this.formData);
       this.showForm = false;  // Hide the form overlay
@@ -139,6 +155,7 @@ export default {
     resetForm() {
       this.formData = {
         relation: '',
+        parentType: '',  // Reset this field
         name: '',
         age: '',
         occupation: '',
@@ -169,9 +186,11 @@ export default {
 
 .basic-form {
   width: 100%;
-  max-width: 70%;
+  max-width: 85%;
+  margin-left: 220px;
+  margin-top: 5%;
   padding: 20px;
-  background-color: rgba(240, 240, 240, 0.8); /* Semi-transparent background */
+  background-color: rgba(240, 240, 240, 0.8);
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -269,7 +288,6 @@ button:hover {
   flex-wrap: wrap;
   justify-content: center;
   font-family: Arial, Helvetica, sans-serif;
-
 }
 
 .family-member {
@@ -295,7 +313,7 @@ button:hover {
   cursor: pointer;
   padding: 12px;
   font-size: 1em;
-  width: 200px; /* Adjust width as needed */
+  width: 200px;
   box-sizing: border-box;
   margin-top: 10px;
 }

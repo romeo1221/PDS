@@ -3,6 +3,7 @@
     <div class="basic-form">
       <h2>Address Information</h2>
       <form @submit.prevent="submitForm">
+        <!-- Address Type Selection -->
         <div class="form-row">
           <div class="form-group">
             <label>Type:</label>
@@ -15,34 +16,89 @@
               </label>
             </div>
           </div>
+        </div>
 
-          <div class="form-group">
-            <label for="country">Country:</label>
-            <input type="text" id="country" v-model="formData.country" required>
+        <!-- Permanent Address Form -->
+        <div v-if="formData.addressType === 'Permanent'" class="address-form">
+          <h3>Permanent Address (Required)</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="country">Country:</label>
+              <input type="text" id="country" v-model="formData.country" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="province">Province:</label>
+              <input type="text" id="province" v-model="formData.province" required>
+            </div>
+
+            <div class="form-group">
+              <label for="city">City/Town:</label>
+              <input type="text" id="city" v-model="formData.city" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="barangay">Barangay:</label>
+              <input type="text" id="barangay" v-model="formData.barangay" required>
+            </div>
+
+            <div class="form-group">
+              <label for="houseNumber">House Number/Street/Subdivision:</label>
+              <input type="text" id="houseNumber" v-model="formData.houseNumber" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="zipCode">ZIP Code:</label>
+              <input type="text" id="zipCode" v-model="formData.zipCode" required>
+            </div>
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="province">Province:</label>
-            <input type="text" id="province" v-model="formData.province" required>
+        <!-- Temporary Address Form -->
+        <div v-if="formData.addressType === 'Temporary'" class="address-form">
+          <h3>Temporary Address</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="tempCountry">Country:</label>
+              <input type="text" id="tempCountry" v-model="formData.tempCountry" required>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="city">City/Town:</label>
-            <input type="text" id="city" v-model="formData.city" required>
-          </div>
-        </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="tempProvince">Province:</label>
+              <input type="text" id="tempProvince" v-model="formData.tempProvince" required>
+            </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="barangay">Barangay:</label>
-            <input type="text" id="barangay" v-model="formData.barangay" required>
+            <div class="form-group">
+              <label for="tempCity">City/Town:</label>
+              <input type="text" id="tempCity" v-model="formData.tempCity" required>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="houseNumber">House Number/Street/Subdivision:</label>
-            <input type="text" id="houseNumber" v-model="formData.houseNumber" required>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="tempBarangay">Barangay:</label>
+              <input type="text" id="tempBarangay" v-model="formData.tempBarangay" required>
+            </div>
+
+            <div class="form-group">
+              <label for="tempHouseNumber">House Number/Street/Subdivision:</label>
+              <input type="text" id="tempHouseNumber" v-model="formData.tempHouseNumber" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="tempZipCode">ZIP Code:</label>
+              <input type="text" id="tempZipCode" v-model="formData.tempZipCode" required>
+            </div>
           </div>
         </div>
 
@@ -55,17 +111,23 @@
           <button type="button" class="next-button" @click="goTo('/family')">Next</button>
         </div>
       </form>
-    </div>
 
-    <div v-if="formSubmitted" class="form-submission-overlay">
-      <div class="submitted-message">
-        <p>Form submitted successfully!</p>
-        <p>Type: {{ formData.addressType }}</p>
-        <p>Country: {{ formData.country }}</p>
-        <p>Province: {{ formData.province }}</p>
-        <p>City/Town: {{ formData.city }}</p>
-        <p>Barangay: {{ formData.barangay }}</p>
-        <p>House Number/Street/Subdivision: {{ formData.houseNumber }}</p>
+      <!-- Results Section -->
+      <div v-if="formSubmitted" class="form-results">
+        <h3>Submitted Address Information</h3>
+        <p v-if="formData.addressType === 'Permanent'">Country: {{ formData.country }}</p>
+        <p v-if="formData.addressType === 'Permanent'">Province: {{ formData.province }}</p>
+        <p v-if="formData.addressType === 'Permanent'">City/Town: {{ formData.city }}</p>
+        <p v-if="formData.addressType === 'Permanent'">Barangay: {{ formData.barangay }}</p>
+        <p v-if="formData.addressType === 'Permanent'">House Number/Street/Subdivision: {{ formData.houseNumber }}</p>
+        <p v-if="formData.addressType === 'Permanent'">ZIP Code: {{ formData.zipCode }}</p>
+
+        <p v-if="formData.addressType === 'Temporary'">Country: {{ formData.tempCountry }}</p>
+        <p v-if="formData.addressType === 'Temporary'">Province: {{ formData.tempProvince }}</p>
+        <p v-if="formData.addressType === 'Temporary'">City/Town: {{ formData.tempCity }}</p>
+        <p v-if="formData.addressType === 'Temporary'">Barangay: {{ formData.tempBarangay }}</p>
+        <p v-if="formData.addressType === 'Temporary'">House Number/Street/Subdivision: {{ formData.tempHouseNumber }}</p>
+        <p v-if="formData.addressType === 'Temporary'">ZIP Code: {{ formData.tempZipCode }}</p>
       </div>
     </div>
   </div>
@@ -81,7 +143,14 @@ export default {
         province: '',
         city: '',
         barangay: '',
-        houseNumber: ''
+        houseNumber: '',
+        zipCode: '',
+        tempCountry: '',
+        tempProvince: '',
+        tempCity: '',
+        tempBarangay: '',
+        tempHouseNumber: '',
+        tempZipCode: ''
       },
       formSubmitted: false,
       warningMessage: ''
@@ -89,18 +158,49 @@ export default {
   },
   methods: {
     submitForm() {
-      console.log('Form submitted:', this.formData);
-      this.formSubmitted = true;
+      if (this.isFormValid()) {
+        console.log('Form submitted:', this.formData);
+        this.formSubmitted = true;
+      } else {
+        this.warningMessage = 'Please complete the required fields before proceeding.';
+      }
     },
     isFormValid() {
-      return Object.values(this.formData).every(field => field.trim() !== '') && this.formData.addressType;
+      if (!this.formData.addressType) {
+        // No address type selected
+        return false;
+      }
+      
+      if (this.formData.addressType === 'Permanent') {
+        return [
+          this.formData.country,
+          this.formData.province,
+          this.formData.city,
+          this.formData.barangay,
+          this.formData.houseNumber,
+          this.formData.zipCode
+        ].every(field => field.trim() !== '');
+      }
+      
+      if (this.formData.addressType === 'Temporary') {
+        return [
+          this.formData.tempCountry,
+          this.formData.tempProvince,
+          this.formData.tempCity,
+          this.formData.tempBarangay,
+          this.formData.tempHouseNumber,
+          this.formData.tempZipCode
+        ].every(field => field.trim() !== '');
+      }
+      
+      return false; // In case of invalid addressType
     },
     goTo(route) {
-      if (this.isFormValid() || route === '/basic') {
+      if (route === '/family' && !this.isFormValid()) {
+        this.warningMessage = 'Please complete the required fields before proceeding.';
+      } else {
         this.warningMessage = '';
         this.$router.push(route);
-      } else {
-        this.warningMessage = 'Please complete the form before proceeding.';
       }
     }
   }
@@ -114,15 +214,16 @@ export default {
   align-items: flex-start;
   gap: 30px;
   padding: 50px;
-  padding-top: 1%;
+  padding-top: 0px;
+  margin-top: 9%;
 }
 
 .basic-form {
-  margin-left: 100px;
+  margin-left: 150px;
   width: 100%;
-  max-width: 70%;
+  max-width: 80%;
   padding: 20px;
-  background-color: rgba(240, 240, 240, 0.8); /* Semi-transparent background */
+  background-color: rgba(240, 240, 240, 0.8); 
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -147,8 +248,7 @@ label {
   font-weight: bold;
 }
 
-input[type="text"],
-select {
+input[type="text"] {
   width: 90%;
   padding: 10px;
   font-size: 1em;
@@ -163,6 +263,14 @@ select {
   margin-left: 12px;
   display: flex;
   gap: 15px;
+}
+
+.address-form {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
 }
 
 .warning-message {
@@ -185,7 +293,7 @@ select {
   padding: 12px;
   font-size: 1em;
   box-sizing: border-box;
-  width: 100px; /* Adjust width as needed */
+  width: 100px; 
   text-align: center;
 }
 
@@ -194,28 +302,19 @@ select {
 }
 
 .prev-button {
-  background-color: #187b0d; /* Optional: different color for "Previous" */
+  background-color: #187b0d; 
 }
 
 .prev-button:hover {
-  background-color: #145a09; /* Optional: different hover color for "Previous" */
+  background-color: #145a09; 
 }
 
-.form-submission-overlay {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(255, 255, 255, 0.9);
+.form-results {
+  margin-top: 20px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-}
-
-.submitted-message {
-  text-align: center;
+  background-color: #f9f9f9;
 }
 
 @media (max-width: 600px) {

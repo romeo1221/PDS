@@ -6,6 +6,9 @@ import Family from "./Pages/Family.vue";
 import Education from "./Pages/Education.vue";
 import Work from "./Pages/Work.vue";
 import Achievement from "./Pages/Achievement.vue";
+import Login from "./Pages/Login.vue";
+import Prent from "./Pages/Prent.vue";
+
 
 export const routes = [
     {
@@ -42,5 +45,15 @@ export const routes = [
         path: '/achievement', 
         component: Achievement,
         name: 'sheeeesh'
-    }
+    },
+    {
+        path: '/login', 
+        component: Login,
+        name: 'eyyyyy'
+    },
+    {
+        path: '/prent', 
+        component:Prent,
+        name: 'wiw'
+    },
 ]
