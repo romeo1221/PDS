@@ -122,7 +122,7 @@
 
     <div class="upload-container">
       <label for="photo">
-        <img :src="photoDataUrl || '/images/profile.png'" alt="Profile Picture" class="profile-img">
+        <img :src="photoDataUrl || '/images/Pro.png'" alt="Profile Picture" class="profile-img">
         <pre>Upload Profile</pre>
       </label>
       <input type="file" id="photo" @change="handleFileUpload" accept="image/*">

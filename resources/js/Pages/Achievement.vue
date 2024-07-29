@@ -48,7 +48,7 @@
           <button>Previous</button>
         </router-link> -->
         <button v-if="awards.length > 0" @click="editForm" class="edit-button">Edit</button>
-        <router-link to="/achievement">
+        <router-link to="/prent">
           <button class="ok-button">OK na po</button>
         </router-link>
       </div>
@@ -179,13 +179,13 @@ textarea {
 }
 
 .prev-button {
-  background-color: #007bff;
+  background-color: #187b0d;
   color: white;
   border: none;
 }
 
 .prev-button:hover {
-  background-color: #0056b3;
+  background-color: #145a09;
 }
 
 .add-button {
@@ -199,27 +199,27 @@ textarea {
 }
 
 .submit-button {
-  background-color: #28a745;
+  background-color: #187b0d;
   color: white;
   border: none;
 }
 
 .submit-button:hover {
-  background-color: #218838;
+  background-color: #145a09;
 }
 
 .ok-button {
-  background-color: #28a745;
+  background-color: #187b0d;
   color: white;
   border: none;
 }
 
 .ok-button:hover {
-  background-color: #218838;
+  background-color: #145a09;
 }
 
 .edit-button {
-  background-color: #007bff;
+  background-color: #187b0d;
   color: white;
   border: none;
   cursor: pointer;
@@ -231,7 +231,7 @@ textarea {
 }
 
 .edit-button:hover {
-  background-color: #0056b3;
+  background-color: #145a09;
 }
 
 .submitted-form {
@@ -242,7 +242,11 @@ textarea {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
   margin-left: 90px;
-  width: 80%; 
+  width: 80%;   
+}
+
+.submitted-form  li{
+  margin-top: 20px;
 }
 
 .remove-button {

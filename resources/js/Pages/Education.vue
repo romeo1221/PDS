@@ -6,7 +6,7 @@
       <div class="form-row">
         <div class="form-group">
           <label for="selectDegree">Select Degree Level:</label>
-          <select id="selectDegree" v-model="selectedDegree" @change="updateDegree" required>
+          <select id="selectDegree" v-model="selectedDegree" @change="updateDegree">
             <option value="">--Select Level--</option>
             <option v-for="degree in availableDegrees" :key="degree" :value="degree">
               {{ degree }}
@@ -18,10 +18,10 @@
       <!-- Buttons inside basic-form -->
       <div class="button-row">
         <router-link to="/family">
-          <button>Previous</button>
+          <button class="nav-button">Previous</button>
         </router-link>
         <router-link to="/work">
-          <button>Next</button>
+          <button class="nav-button">Next</button>
         </router-link>
       </div>
     </div>
@@ -34,7 +34,7 @@
           <div class="form-row">
             <div class="form-group">
               <label for="degree">Education Level:</label>
-              <select id="degree" v-model="formData.degree" disabled required>
+              <select id="degree" v-model="formData.degree" disabled>
                 <option value="">--Select Level--</option>
                 <option v-for="degree in degreeOptions" :key="degree" :value="degree">
                   {{ degree }}
@@ -44,26 +44,49 @@
 
             <div class="form-group">
               <label for="institution">Name of School:</label>
-              <input type="text" id="institution" v-model="formData.institution" required>
+              <input type="text" id="institution" v-model="formData.institution">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="address">School Address:</label>
-              <input type="text" id="address" v-model="formData.address" required>
+              <input type="text" id="address" v-model="formData.address">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="yearOfGraduation">Year Graduated/Last Attended:</label>
-              <input type="number" id="yearOfGraduation" v-model="formData.yearOfGraduation" required>
+              <input type="number" id="yearOfGraduation" v-model="formData.yearOfGraduation">
             </div>
           </div>
 
-          <button type="submit">Submit</button>
-          <button type="button" @click="closeForm">Close</button>
+          <!-- New Fields -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="basicEducation">Basic Education/Degree/Course:</label>
+              <input type="text" id="basicEducation" v-model="formData.basicEducation">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="highestLevel">Highest Level/Units Earned:</label>
+              <input type="text" id="highestLevel" v-model="formData.highestLevel">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="honors">Scholarship/Academic Honors Received:</label>
+              <input type="text" id="honors" v-model="formData.honors">
+            </div>
+          </div>
+          
+          <p v-if="warningMessage" class="warning-message">{{ warningMessage }}</p>
+          <button type="submit" class="submit-button">Submit</button>
+          <button type="button" class="close-button" @click="closeForm">Close</button>
         </form>
       </div>
     </div>
@@ -78,6 +101,9 @@
             <p>Name of School: {{ education.institution }}</p>
             <p>School Address: {{ education.address }}</p>
             <p>Year Graduated/Last Attended: {{ education.yearOfGraduation }}</p>
+            <p>Basic Education/Degree/Course: {{ education.basicEducation }}</p>
+            <p>Highest Level/Units Earned: {{ education.highestLevel }}</p>
+            <p>Scholarship/Academic Honors Received: {{ education.honors }}</p>
             <button class="remove-button" @click="removeEducation(index)">Remove</button>
           </div>
         </div>
@@ -96,24 +122,27 @@ export default {
         degree: '',
         institution: '',
         address: '',
-        yearOfGraduation: ''
+        yearOfGraduation: '',
+        basicEducation: '',   // New field
+        highestLevel: '',     // New field
+        honors: ''            // New field
       },
       showForm: false,
       formSubmitted: false,
       educationBackground: [],
       degreeOptions: [
-        'Primary Education',
+        'Elementary',
         'Junior High',
         'Senior High',
-        'Tertiary',
         'Vocational',
-        'Post-Graduate'
-      ]
+        'Tertiary',
+        'Post-Graduate'        
+      ],
+      warningMessage: ''
     };
   },
   computed: {
     availableDegrees() {
-      // Filter out the degrees that have already been selected
       return this.degreeOptions.filter(degree => 
         !this.educationBackground.some(education => education.degree === degree)
       );
@@ -122,35 +151,47 @@ export default {
   methods: {
     updateDegree() {
       this.formData.degree = this.selectedDegree;
-      this.showForm = !!this.selectedDegree;  // Show the form if a degree level is selected
+      this.showForm = !!this.selectedDegree;
       if (this.showForm) {
         this.formData = {
           degree: this.selectedDegree,
           institution: '',
           address: '',
-          yearOfGraduation: ''
+          yearOfGraduation: '',
+          basicEducation: '', // Initialize new field
+          highestLevel: '',   // Initialize new field
+          honors: ''          // Initialize new field
         };
       }
     },
     submitForm() {
+      if (!this.formData.institution || !this.formData.address || !this.formData.yearOfGraduation) {
+        this.warningMessage = 'Please fill out all fields.';
+        return;
+      }
       console.log('Submitting form with data:', this.formData);
       this.educationBackground.push({ ...this.formData });
       console.log('Education Background:', this.educationBackground);
       this.formSubmitted = true;
       this.showForm = false;
       this.selectedDegree = ''; // Clear the selectedDegree after submission
+      this.warningMessage = ''; // Clear warning message after successful submission
     },
     closeForm() {
       this.showForm = false;
       this.selectedDegree = '';
+      this.warningMessage = ''; // Clear warning message on close
     },
     resetForm() {
       this.formSubmitted = false;
       this.formData = {
-        degree: this.selectedDegree || '', // Set degree to selectedDegree if available
+        degree: this.selectedDegree || '',
         institution: '',
         address: '',
-        yearOfGraduation: ''
+        yearOfGraduation: '',
+        basicEducation: '',
+        highestLevel: '',   
+        honors: '' 
       };
       this.showForm = true; 
     },
@@ -212,7 +253,7 @@ select {
   margin-bottom: 10px;
 }
 
-button {
+.nav-button {
   background-color: #187b0d;
   color: white;
   border: none;
@@ -224,7 +265,40 @@ button {
   margin-top: 10px;
 }
 
-button:hover {
+.nav-button:hover {
+  background-color: #145a09;
+}
+
+.submit-button {
+  background-color: #187b0d;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 12px;
+  font-size: 1em;
+  width: 100px;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+
+.submit-button:hover {
+  background-color: #145a09;
+}
+
+.close-button {
+  background-color: #187b0d;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 12px;
+  font-size: 1em;
+  width: 100px;
+  box-sizing: border-box;
+  margin-top: 10px;
+  margin-left: 25px;
+}
+
+.close-button:hover {
   background-color: #145a09;
 }
 
@@ -253,7 +327,7 @@ button:hover {
 
 .results-section {
   width: 100%;
-  max-width: 1000px;
+  max-width: 88%;
   background-color: rgba(255, 255, 255, 0.9);
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -262,6 +336,7 @@ button:hover {
   margin-top: 20px;
   box-sizing: border-box; 
   overflow: auto; 
+  margin-left: 220px; 
 }
 
 .submitted-message {
@@ -306,6 +381,12 @@ button:hover {
   justify-content: space-between;
   gap: 10px;
   margin-top: 20px;
+}
+
+.warning-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 15px;
 }
 
 @media (max-width: 600px) {

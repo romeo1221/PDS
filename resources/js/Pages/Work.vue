@@ -3,68 +3,70 @@
     <!-- Basic Form -->
     <div class="basic-form">
       <h2>Work Background</h2>
-      <button @click="showForm = !showForm">Add Work Experience</button>
+      <button class="add-work-button" @click="showForm = !showForm">Add Work Experience</button>
 
       <!-- Form Popup (inside the basic-form) -->
       <div v-if="showForm" class="form-popup">
         <h2>Work Information</h2>
         <form @submit.prevent="submitForm">
+          <!-- Form fields -->
           <div class="form-row">
-            <div class="form-group">
-              <label for="employer">Employer:</label>
-              <input type="text" id="employer" v-model="formData.employer" required>
-            </div>
             <div class="form-group">
               <label for="address">Address:</label>
-              <input type="text" id="address" v-model="formData.address" required>
+              <input type="text" id="address" v-model="formData.address">
             </div>
-          </div>
-
-          <div class="form-row">
             <div class="form-group">
               <label for="contact">Tel./CP no.:</label>
-              <input type="text" id="contact" v-model="formData.contact" required>
+              <input type="text" id="contact" v-model="formData.contact">
             </div>
+          </div>
+
+          <div class="form-row">
             <div class="form-group">
               <label for="inclusive-dates">Inclusive Dates (from - to):</label>
-              <input type="text" id="inclusive-dates" v-model="formData.inclusiveDates" required>
+              <input type="text" id="inclusive-dates" v-model="formData.inclusiveDates">
             </div>
-          </div>
-
-          <div class="form-row">
             <div class="form-group">
               <label for="position-title">Position Title:</label>
-              <input type="text" id="position-title" v-model="formData.positionTitle" required>
+              <input type="text" id="position-title" v-model="formData.positionTitle">
             </div>
+          </div>
+
+          <div class="form-row">
             <div class="form-group">
               <label for="department">Department/Agency:</label>
-              <input type="text" id="department" v-model="formData.department" required>
+              <input type="text" id="department" v-model="formData.department">
             </div>
-          </div>
-
-          <div class="form-row">
             <div class="form-group">
               <label for="monthly-salary">Monthly Salary:</label>
-              <input type="number" id="monthly-salary" v-model="formData.monthlySalary" required>
-            </div>
-            <div class="form-group">
-              <label for="salary-grade">Salary/Job/Pay Grade:</label>
-              <input type="text" id="salary-grade" v-model="formData.salaryGrade" required>
+              <input type="number" id="monthly-salary" v-model="formData.monthlySalary">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="appointment-status">Status of Appointment:</label>
-              <input type="text" id="appointment-status" v-model="formData.appointmentStatus" required>
+              <label for="salary-grade">Salary/Job/Pay Grade:</label>
+              <input type="text" id="salary-grade" v-model="formData.salaryGrade">
             </div>
             <div class="form-group">
+              <label for="appointment-status">Status of Appointment:</label>
+              <input type="text" id="appointment-status" v-model="formData.appointmentStatus">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
               <label for="govt-service">Gov't Service (Y/N):</label>
-              <select id="govt-service" v-model="formData.govtService" required>
-                <option value="Y">Yes</option>
-                <option value="N">No</option>
+              <select id="govt-service" v-model="formData.govtService">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
               </select>
             </div>
+          </div>
+
+          <!-- Warning Message -->
+          <div v-if="warningMessage" class="warning-message">
+            {{ warningMessage }}
           </div>
 
           <div class="form-row button-row">
@@ -90,7 +92,6 @@
       <div class="submitted-message">
         <div class="work-background">
           <div v-for="(work, index) in workBackground" :key="index" class="work-entry">
-            <p>Employer: {{ work.employer }}</p>
             <p>Address: {{ work.address }}</p>
             <p>Tel./CP no.: {{ work.contact }}</p>
             <p>Inclusive Dates: {{ work.inclusiveDates }}</p>
@@ -108,12 +109,12 @@
   </div>
 </template>
 
+
 <script>
 export default {
   data() {
     return {
       formData: {
-        employer: '',
         address: '',
         contact: '',
         inclusiveDates: '',
@@ -126,24 +127,30 @@ export default {
       },
       showForm: false,
       formSubmitted: false,
+      warningMessage: '',
       workBackground: []
     };
   },
   methods: {
     submitForm() {
-      this.workBackground.push({ ...this.formData });
-      console.log('Form submitted:', this.formData);
-      this.formSubmitted = true;
-      this.showForm = false;
-      this.resetForm();
+      if (this.isFormValid()) {
+        this.workBackground.push({ ...this.formData });
+        console.log('Form submitted:', this.formData);
+        this.formSubmitted = true;
+        this.showForm = false;
+        this.resetForm();
+        this.warningMessage = ''; // Clear warning message on successful submission
+      } else {
+        this.warningMessage = 'Please fill in all required fields.';
+      }
     },
     closeForm() {
       this.showForm = false;
       this.resetForm();
+      this.warningMessage = '';
     },
     resetForm() {
       this.formData = {
-        employer: '',
         address: '',
         contact: '',
         inclusiveDates: '',
@@ -157,6 +164,9 @@ export default {
     },
     removeWork(index) {
       this.workBackground.splice(index, 1);
+    },
+    isFormValid() {
+      return Object.values(this.formData).every(field => field !== '');
     }
   }
 };
@@ -185,6 +195,25 @@ export default {
   text-align: left;
   margin-top: 40px;
   position: relative;
+}
+
+/* Add Work Experience Button Styles */
+.add-work-button {
+  background-color: #187b0d;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 12px;
+  font-size: 1em;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 10px;
+  max-width: 500px;
+  margin-left: 26%;
+}
+
+.add-work-button:hover {
+  background-color: #145a09;
 }
 
 /* Form Popup Styles */
@@ -261,19 +290,15 @@ button:hover {
   width: 100px;
 }
 
-.button-row .add-button {
-  width: 100%;
-  max-width: 200px;
-}
-
 /* Results Section */
 .results-section {
   width: 100%;
-  max-width: 600px;
-  padding: 20px;
-  background: #fff;
+  max-width: 99%;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   margin-top: 20px;
 }
 
@@ -293,30 +318,29 @@ button:hover {
   border: 1px solid #ccc;
   border-radius: 8px;
   width: 100%;
-  max-width: 600px;
-  background-color: rgba(240, 240, 240, 0.8);
+  max-width: 10000px;
+  background-color: #f9f9f9;
 }
 
 .remove-button {
-  background-color: #d9534f;
+  width: 100px;
+  background-color: #f44336;
   color: white;
   border: none;
   cursor: pointer;
   padding: 8px;
   font-size: 0.9em;
-  width: 100px;
-  box-sizing: border-box;
   margin-top: 10px;
 }
 
 .remove-button:hover {
-  background-color: #c9302c;
+  background-color: #c62828;
 }
 
-@media (max-width: 600px) {
-  .button-row {
-    flex-direction: column;
-    gap: 10px;
-  }
+/* Warning Message Styles */
+.warning-message {
+  color: red;
+  padding: 10px;
+  margin-top: 10px;
 }
 </style>

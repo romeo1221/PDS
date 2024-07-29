@@ -9,7 +9,6 @@
           <select id="selectRelation" v-model="selectedRelation" @change="updateRelation" required>
             <option value="">--Select Relationship--</option>
             <option value="Parent">Parent</option>
-            <option value="Sibling">Sibling</option>
             <option value="Spouse">Spouse</option>
             <option value="Child">Child</option>
           </select>
@@ -38,7 +37,6 @@
               <select v-if="isAddingAnother" id="relation" v-model="formData.relation" required>
                 <option value="">--Select Relationship--</option>
                 <option value="Parent">Parent</option>
-                <option value="Sibling">Sibling</option>
                 <option value="Spouse">Spouse</option>
                 <option value="Child">Child</option>
               </select>
@@ -48,7 +46,7 @@
             <div v-if="formData.relation === 'Parent'" class="form-group">
               <label for="parentType">Parent Type:</label>
               <select id="parentType" v-model="formData.parentType" required>
-                <option value="">--Select Parent Type--</option>
+                <option value="">Select Relationship</option>
                 <option value="Mother">Mother</option>
                 <option value="Father">Father</option>
               </select>
@@ -113,7 +111,7 @@ export default {
       selectedRelation: '',
       formData: {
         relation: '',
-        parentType: '',  // Added field
+        parentType: '',  
         name: '',
         age: '',
         occupation: '',
@@ -269,14 +267,14 @@ button:hover {
 
 .results-section {
   width: 100%;
-  max-width: 1000px;
+  max-width: 85%;
   background-color: rgba(255, 255, 255, 0.9);
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   margin-top: 20px;
-  margin-left: 45px;
+  margin-left: 220px;
 }
 
 .submitted-message {
@@ -300,6 +298,13 @@ button:hover {
 }
 
 .button-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.button-row{
   display: flex;
   justify-content: space-between;
   gap: 10px;

@@ -73,12 +73,60 @@
 
     <!-- Contact Information Section -->
     <section class="pds-section">
-      <h2>Contact Information</h2>
+      <h2>Personal Address</h2>
       <table class="pds-table">
         <tbody>
           <tr>
-            <td class="pds-label">Address:</td>
-            <td class="pds-data">{{ formData.address || 'N/A' }}</td>
+            <td class="pds-label">Address Type:</td>
+            <td class="pds-data">{{ formData.addressType || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td class="pds-label">Country:</td>
+            <td class="pds-data">{{ formData.country || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td class="pds-label">Province:</td>
+            <td class="pds-data">{{ formData.province || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td class="pds-label">City:</td>
+            <td class="pds-data">{{ formData.city || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td class="pds-label">Barangay:</td>
+            <td class="pds-data">{{ formData.barangay || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td class="pds-label">House Number:</td>
+            <td class="pds-data">{{ formData.houseNumber || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td class="pds-label">Zip Code:</td>
+            <td class="pds-data">{{ formData.zipCode || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td class="pds-label">Temporary Country:</td>
+            <td class="pds-data">{{ formData.tempCountry || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td class="pds-label">Temporary Province:</td>
+            <td class="pds-data">{{ formData.tempProvince || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td class="pds-label">Temporary City:</td>
+            <td class="pds-data">{{ formData.tempCity || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td class="pds-label">Temporary Barangay:</td>
+            <td class="pds-data">{{ formData.tempBarangay || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td class="pds-label">Temporary House Number:</td>
+            <td class="pds-data">{{ formData.tempHouseNumber || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td class="pds-label">Temporary Zip Code:</td>
+            <td class="pds-data">{{ formData.tempZipCode || 'N/A' }}</td>
           </tr>
           <tr>
             <td class="pds-label">Contact Number:</td>
@@ -175,6 +223,9 @@ export default {
     // Simulating data fetch; replace with actual data fetch logic
     this.fetchFormData();
   },
+  mounted() {
+    this.fetchFormData();
+  },
   methods: {
     fetchFormData() {
       // Replace with actual data fetching logic
@@ -194,7 +245,19 @@ export default {
         bloodType: 'O+',
         civilStatus: 'Single',
         email: 'john.doe@example.com',
-        address: '123 Main St, City, Country',
+        addressType: 'Permanent',
+        country: 'Country',
+        province: 'Province',
+        city: 'City',
+        barangay: 'Barangay',
+        houseNumber: '123',
+        zipCode: '1000',
+        tempCountry: 'Temp Country',
+        tempProvince: 'Temp Province',
+        tempCity: 'Temp City',
+        tempBarangay: 'Temp Barangay',
+        tempHouseNumber: '456',
+        tempZipCode: '2000',
         contactNumber: '123-456-7890',
         education: [
           { school: 'University A', degree: 'Bachelor\'s Degree' },
