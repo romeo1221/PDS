@@ -63,7 +63,7 @@ export default {
       awards: [{ name: "", description: "" }],
       locked: false,
       editMode: false,
-      warningMessage: '' // Added warning message property
+      warningMessage: ''
     };
   },
   methods: {
@@ -101,7 +101,7 @@ export default {
     },
     removeAward(index) {
       this.awards.splice(index, 1);
-    }
+    },
   }
 };
 </script>

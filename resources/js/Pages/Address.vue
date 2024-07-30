@@ -66,38 +66,38 @@
           <div class="form-row">
             <div class="form-group">
               <label for="tempCountry">Country:</label>
-              <input type="text" id="tempCountry" v-model="formData.tempCountry" required>
+              <input type="text" id="tempCountry" v-model="formData.tempCountry">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="tempProvince">Province:</label>
-              <input type="text" id="tempProvince" v-model="formData.tempProvince" required>
+              <input type="text" id="tempProvince" v-model="formData.tempProvince">
             </div>
 
             <div class="form-group">
               <label for="tempCity">City/Town:</label>
-              <input type="text" id="tempCity" v-model="formData.tempCity" required>
+              <input type="text" id="tempCity" v-model="formData.tempCity">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="tempBarangay">Barangay:</label>
-              <input type="text" id="tempBarangay" v-model="formData.tempBarangay" required>
+              <input type="text" id="tempBarangay" v-model="formData.tempBarangay">
             </div>
 
             <div class="form-group">
               <label for="tempHouseNumber">House Number/Street/Subdivision:</label>
-              <input type="text" id="tempHouseNumber" v-model="formData.tempHouseNumber" required>
+              <input type="text" id="tempHouseNumber" v-model="formData.tempHouseNumber">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="tempZipCode">ZIP Code:</label>
-              <input type="text" id="tempZipCode" v-model="formData.tempZipCode" required>
+              <input type="text" id="tempZipCode" v-model="formData.tempZipCode">
             </div>
           </div>
         </div>
@@ -108,6 +108,7 @@
 
         <div class="form-buttons">
           <button type="button" class="prev-button" @click="goTo('/basic')">Previous</button>
+          <button type="button" class="save-button" @click="saveForm">Save</button>
           <button type="button" class="next-button" @click="goTo('/family')">Next</button>
         </div>
       </form>
@@ -134,17 +135,19 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
       formData: {
-        addressType: '',
+        address_type: '',
         country: '',
         province: '',
         city: '',
         barangay: '',
-        houseNumber: '',
-        zipCode: '',
+        house_number: '',
+        zip_code: '',
         tempCountry: '',
         tempProvince: '',
         tempCity: '',
@@ -156,10 +159,14 @@ export default {
       warningMessage: ''
     };
   },
+  created() {
+    this.loadFormData();
+  },
   methods: {
-    submitForm() {
+    async submitForm() {
       if (this.isFormValid()) {
         console.log('Form submitted:', this.formData);
+        await this.saveForm();
         this.formSubmitted = true;
       } else {
         this.warningMessage = 'Please complete the required fields before proceeding.';
@@ -171,25 +178,25 @@ export default {
         return false;
       }
       
-      if (this.formData.addressType === 'Permanent') {
+      if (this.formData.address_type === 'Permanent') {
         return [
           this.formData.country,
           this.formData.province,
           this.formData.city,
           this.formData.barangay,
-          this.formData.houseNumber,
-          this.formData.zipCode
+          this.formData.house_number,
+          this.formData.zip_code
         ].every(field => field.trim() !== '');
       }
       
-      if (this.formData.addressType === 'Temporary') {
+      if (this.formData.address_type === 'Temporary') {
         return [
-          this.formData.tempCountry,
-          this.formData.tempProvince,
-          this.formData.tempCity,
-          this.formData.tempBarangay,
-          this.formData.tempHouseNumber,
-          this.formData.tempZipCode
+          this.formData.temp_country,
+          this.formData.temp_province,
+          this.formData.temp_city,
+          this.formData.temp_barangay,
+          this.formData.temp_house_number,
+          this.formData.temp_zip_code
         ].every(field => field.trim() !== '');
       }
       
@@ -201,6 +208,38 @@ export default {
       } else {
         this.warningMessage = '';
         this.$router.push(route);
+      }
+    },
+    async saveForm() {
+      const data = {
+        address_type: String(this.formData.address_type),
+        country: String(this.formData.country),
+        province: String(this.formData.province),
+        city: String(this.formData.city),
+        barangay: String(this.formData.barangay),
+        house_number: String(this.formData.house_number),
+        zip_code: String(this.formData.zip_code),
+        temp_country: String(this.formData.temp_country),
+        temp_province: String(this.formData.temp_province),
+        temp_city: String(this.formData.temp_city),
+        temp_barangay: String(this.formData.temp_barangay),
+        temp_house_number: String(this.formData.temp_house_number),
+        temp_zip_code: String(this.formData.temp_zip_code)
+      };
+      
+      try {
+        // Send data to your backend API
+        await axios.post('/address-infos', data);
+        // If successful, also save to localStorage
+        localStorage.setItem('addressFormData', JSON.stringify(data));
+      } catch (error) {
+        console.error('Error saving form data:', error);
+      }
+    },
+    loadFormData() {
+      const data = localStorage.getItem('addressFormData');
+      if (data) {
+        this.formData = JSON.parse(data);
       }
     }
   }

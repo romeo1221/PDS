@@ -116,6 +116,7 @@
             </div>
           </div>
           <button type="button" class="next-button" @click="goTo('/address')">Next</button>
+          <button type="button" class="save-button" @click="saveForm">Save</button>
         </div>
       </form>
     </div>
@@ -131,6 +132,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -151,7 +154,6 @@ export default {
         civilStatus: '',
         email: ''
       },
-      formSubmitted: false,
       warningMessage: '',
       photoDataUrl: ''
     };
@@ -159,9 +161,7 @@ export default {
   methods: {
     submitForm() {
       if (this.isFormValid()) {
-        console.log('Form submitted:', this.formData);
-        this.formSubmitted = true;
-        this.goTo('/address');
+        this.saveForm();
       } else {
         this.warningMessage = 'Please complete the form before proceeding.';
       }
@@ -169,7 +169,15 @@ export default {
     isFormValid() {
       const isDual = this.formData.citizenship === 'Dual';
       const isDualValid = !isDual || (this.formData.dualType && this.formData.dualCountry);
-      return Object.values(this.formData).every(field => field.trim() !== '') && this.formData.sex && isDualValid;
+
+      const areFieldsValid = Object.values(this.formData).every(field => {
+        if (typeof field === 'string') {
+          return field.trim() !== '';
+        }
+        return field !== null && field !== undefined;
+      });
+
+      return areFieldsValid && this.formData.sex && isDualValid;
     },
     goTo(route) {
       if (this.isFormValid() || route === '/basic') {
@@ -185,13 +193,43 @@ export default {
         const reader = new FileReader();
         reader.onload = (e) => {
           this.photoDataUrl = e.target.result;
-          console.log('Photo uploaded:', this.photoDataUrl); 
         };
         reader.readAsDataURL(file);
       }
+    },
+    saveForm() {
+      axios.post('/personal-info', this.formData)
+        .then(response => {
+          this.warningMessage = 'Form data saved successfully!';
+          this.goTo('/address');
+        })
+        .catch(error => {
+          console.error('Error saving form data:', error);
+          this.warningMessage = 'Error saving form data.';
+        });
+    },
+    saveFormToLocalStorage() {
+      localStorage.setItem('formData', JSON.stringify(this.formData));
+    },
+    loadFormDataFromLocalStorage() {
+      const savedData = localStorage.getItem('formData');
+      if (savedData) {
+        this.formData = JSON.parse(savedData);
+      }
+    }
+  },
+  created() {
+    this.loadFormDataFromLocalStorage();
+  },
+  watch: {
+    formData: {
+      handler() {
+        this.saveFormToLocalStorage();
+      },
+      deep: true
     }
   }
-};
+}
 </script>
 
 <style scoped>

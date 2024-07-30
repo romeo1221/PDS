@@ -123,9 +123,9 @@ export default {
         institution: '',
         address: '',
         yearOfGraduation: '',
-        basicEducation: '',   // New field
-        highestLevel: '',     // New field
-        honors: ''            // New field
+        basicEducation: '',   
+        highestLevel: '',     
+        honors: ''           
       },
       showForm: false,
       formSubmitted: false,
