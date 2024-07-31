@@ -9,17 +9,17 @@
             <label>Type:</label>
             <div class="radio-group">
               <label>
-                <input type="radio" v-model="formData.addressType" value="Permanent" required> Permanent
+                <input type="radio" v-model="formData.addressType" value='0' required> Permanent
               </label>
               <label>
-                <input type="radio" v-model="formData.addressType" value="Temporary" required> Temporary
+                <input type="radio" v-model="formData.addressType" value='1' required> Temporary
               </label>
             </div>
           </div>
         </div>
 
         <!-- Permanent Address Form -->
-        <div v-if="formData.addressType === 'Permanent'" class="address-form">
+        <div v-if="formData.addressType === '0' " class="address-form">
           <h3>Permanent Address (Required)</h3>
           <div class="form-row">
             <div class="form-group">
@@ -61,7 +61,7 @@
         </div>
 
         <!-- Temporary Address Form -->
-        <div v-if="formData.addressType === 'Temporary'" class="address-form">
+        <div v-if="formData.addressType === '1'" class="address-form">
           <h3>Temporary Address</h3>
           <div class="form-row">
             <div class="form-group">
@@ -108,7 +108,7 @@
 
         <div class="form-buttons">
           <button type="button" class="prev-button" @click="goTo('/basic')">Previous</button>
-          <button type="button" class="save-button" @click="saveForm">Save</button>
+          <button type="button" class="save-button" @click="submitForm">Save</button>
           <button type="button" class="next-button" @click="goTo('/family')">Next</button>
         </div>
       </form>
@@ -141,13 +141,13 @@ export default {
   data() {
     return {
       formData: {
-        address_type: '',
+        addressType: '',
         country: '',
         province: '',
         city: '',
         barangay: '',
-        house_number: '',
-        zip_code: '',
+        houseNumber: '',
+        zipCode: '',
         tempCountry: '',
         tempProvince: '',
         tempCity: '',
@@ -159,87 +159,63 @@ export default {
       warningMessage: ''
     };
   },
-  created() {
-    this.loadFormData();
-  },
   methods: {
-    async submitForm() {
+    submitForm() {
       if (this.isFormValid()) {
-        console.log('Form submitted:', this.formData);
-        await this.saveForm();
-        this.formSubmitted = true;
+        this.saveForm();
       } else {
-        this.warningMessage = 'Please complete the required fields before proceeding.';
+        this.warningMessage = 'Please complete the form before proceeding.';
       }
     },
     isFormValid() {
       if (!this.formData.addressType) {
-        // No address type selected
-        return false;
+        return false; // No address type selected
       }
-      
-      if (this.formData.address_type === 'Permanent') {
+
+      if (this.formData.addressType === '0') {
         return [
+          this.formData.addressType,
           this.formData.country,
           this.formData.province,
           this.formData.city,
           this.formData.barangay,
-          this.formData.house_number,
-          this.formData.zip_code
+          this.formData.houseNumber,
+          this.formData.zipCode
         ].every(field => field.trim() !== '');
       }
-      
-      if (this.formData.address_type === 'Temporary') {
+
+      if (this.formData.addressType === '1') {
         return [
-          this.formData.temp_country,
-          this.formData.temp_province,
-          this.formData.temp_city,
-          this.formData.temp_barangay,
-          this.formData.temp_house_number,
-          this.formData.temp_zip_code
+          this.formData.addressType,
+          this.formData.tempCountry,
+          this.formData.tempProvince,
+          this.formData.tempCity,
+          this.formData.tempBarangay,
+          this.formData.tempHouseNumber,
+          this.formData.tempZipCode
         ].every(field => field.trim() !== '');
       }
-      
-      return false; // In case of invalid addressType
+
+      return false; // Invalid addressType
+    },
+    saveForm() {
+      axios.post('/address-info', this.formData) // Ensure correct endpoint
+        .then(response => {
+          this.warningMessage = 'Form data saved successfully!';
+          this.formSubmitted = true;
+          this.goTo('/family'); // Update route as necessary
+        })
+        .catch(error => {
+          console.error('Error saving form data:', error);
+          this.warningMessage = 'Error saving form data.';
+        });
     },
     goTo(route) {
       if (route === '/family' && !this.isFormValid()) {
-        this.warningMessage = 'Please complete the required fields before proceeding.';
+        this.warningMessage = 'Please complete the form before proceeding.';
       } else {
         this.warningMessage = '';
         this.$router.push(route);
-      }
-    },
-    async saveForm() {
-      const data = {
-        address_type: String(this.formData.address_type),
-        country: String(this.formData.country),
-        province: String(this.formData.province),
-        city: String(this.formData.city),
-        barangay: String(this.formData.barangay),
-        house_number: String(this.formData.house_number),
-        zip_code: String(this.formData.zip_code),
-        temp_country: String(this.formData.temp_country),
-        temp_province: String(this.formData.temp_province),
-        temp_city: String(this.formData.temp_city),
-        temp_barangay: String(this.formData.temp_barangay),
-        temp_house_number: String(this.formData.temp_house_number),
-        temp_zip_code: String(this.formData.temp_zip_code)
-      };
-      
-      try {
-        // Send data to your backend API
-        await axios.post('/address-infos', data);
-        // If successful, also save to localStorage
-        localStorage.setItem('addressFormData', JSON.stringify(data));
-      } catch (error) {
-        console.error('Error saving form data:', error);
-      }
-    },
-    loadFormData() {
-      const data = localStorage.getItem('addressFormData');
-      if (data) {
-        this.formData = JSON.parse(data);
       }
     }
   }

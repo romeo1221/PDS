@@ -1,15 +1,20 @@
 <?php
 
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\PersonalInfoController;
-use App\Http\Controllers\AddressInfoController;
+use App\Http\Controllers\AddressController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+Route::post('/login', [LogController::class, 'login']);
+// Route::post('/Check', [LogController::class, 'CheckUser']);
+
 
 Route::post('/personal-info', [PersonalInfoController::class, 'store'])->name('personal-info.store');
-Route::post('/address-infos', [AddressInfoController::class, 'save'])->name('address-infos.save');
+Route::post('/address-info', [AddressController::class, 'store']);
+Route::get('/test-model', [AddressController::class, 'testModel']);
+
+
 
 route::get('{any}',function(){
      return view('welcome');
